@@ -1,0 +1,9 @@
+query SearchByTerm($term: String) {
+  search(term: $term) {
+    total
+    business {
+      name
+      url
+    }
+  }
+}

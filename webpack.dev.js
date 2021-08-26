@@ -36,6 +36,11 @@ module.exports = {
           'css-loader',
           'sass-loader'
         ]
+      },
+      {
+        test: /\.(graphql|gql)$/,
+        exclude: /\/node_modules\/(?!apollo-.*?|react-apollo)/,
+        loader: 'graphql-tag/loader'
       }
     ]
   },
