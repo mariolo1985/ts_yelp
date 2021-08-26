@@ -4,8 +4,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const entries = [
-  path.join(__dirname, 'src/js/master.js'),
-  path.join(__dirname, 'src/scss/master.scss')
+  path.join(__dirname, 'src/index.js'),
+  path.join(__dirname, 'src/scss/index.scss')
 ];
 
 module.exports = {
@@ -14,7 +14,12 @@ module.exports = {
   entry: entries,
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'js/master.min.js'
+    filename: 'js/index.min.js'
+  },
+  devServer: {
+    static: './dist',
+    hot: true,
+    open: true,
   },
   module: {
     rules: [
@@ -31,19 +36,26 @@ module.exports = {
           'css-loader',
           'sass-loader'
         ]
+      },
+      {
+        test: /\.(graphql|gql)$/,
+        exclude: /\/node_modules\/(?!apollo-.*?|react-apollo)/,
+        loader: 'graphql-tag/loader'
       }
     ]
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.LoaderOptionsPlugin({
       minimize: true
     }),
     new MiniCssExtractPlugin({
-      filename: 'css/master.min.css'
+      filename: 'css/index.min.css'
     }),
-    new CopyWebpackPlugin([
-      { from: 'src/*.html', to: path.join(__dirname, 'dist'), flatten: true },
-      { from: 'src/data', to: path.join(__dirname, 'dist/data'), flatten: true }
-    ])
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/*.html', to: "[name][ext]" },
+      ]
+    })
   ]
 };
